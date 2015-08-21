@@ -21,7 +21,7 @@ Additional:
        lsbak      List backups
        cdbak      Switch to backup folder
        rmbak      Clean up backup folder
-	   lsdev      List available partitions"
+       lsdev      List available partitions"
 #Flashing with -n or --nobak parameter
 else
  if [[ "$3" = "-n" || "$3" = "--nobak" ]]
