@@ -1,0 +1,46 @@
+#!/system/bin/sh
+#Setting path variables
+#Devices derectory
+DEVDIR=/dev/block/platform/msm_sdcc.1/by-name
+#Backups directory
+BAKDIR=/sdcard/Partition_backup
+#Adding additional commands (not working when launched from bin folder, only after launching "sh flash", will rework in future if fight my laziness)
+alias rmbak="rm -rf $BAKDIR/*;echo All backups are removed"
+alias cdbak="cd $BAKDIR"
+alias lsbak="ls $BAKDIR"
+alias lsdev="ls $DEVDIR"
+#Checking parameters
+if [[ -z "$1" || -z "$2" || "$#" > "3" || -n "$3" && "$3" != "-n" && "$3" != "--nobak" ]]
+then
+#Show info 
+ echo "Partition images flashing utility by Alexander Agura (Aug-21-2015)
+This utility flashes chosen image file to a chosen partition. Partition will be backed up before flashing.
+Usage: flash [PARTITION] [FILE] [-n|--nobak]
+       -n,--nobak Skip backup creating
+Additional:
+       lsbak      List backups
+       cdbak      Switch to backup folder
+       rmbak      Clean up backup folder
+	   lsdev      List available partitions"
+#Flashing with -n or --nobak parameter
+else
+ if [[ "$3" = "-n" || "$3" = "--nobak" ]]
+ then
+  echo "Flashing $2 to $1 without backup!
+Processing..."
+  su root dd if=$2 of=$DEVDIR/$1 || exit 2
+  echo "Done!"
+#Backing up partition
+ else
+  echo "Backing up $1 before flashing..."
+  mkdir -p $BAKDIR
+  su root dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 1
+  echo "$1 saved as $BAKDIR/$1-`busybox date -Iseconds`.img"
+  echo "You can switch to backup folder entering 'cdbak'
+Enter 'lsbak' to list backups or 'rmbak' to clean up backup folder"
+#Flashing
+  echo "Flashing $2 to $1 partition..."
+  su root dd if=$2 of=$DEVDIR/$1 || exit 2
+  echo "Done!"
+ fi
+fi
