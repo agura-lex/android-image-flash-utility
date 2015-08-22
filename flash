@@ -40,18 +40,18 @@ else
  then
   echo "Flashing $2 to $1 without backup!
 Processing..."
-  su root dd if=$2 of=$DEVDIR/$1 || exit 2
+  dd if=$2 of=$DEVDIR/$1 || exit 2
   echo "Done!"
 #Backing up partition
  else
   echo "Backing up $1 before flashing..."
   mkdir -p $BAKDIR
-  su root dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 1
+  dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 1
   echo "$1 saved as $BAKDIR/$1-`busybox date -Iseconds`.img"
   echo "Enter 'flash --lsbak' to list all backups or 'flash --rmbak' to clean up backup folder"
 #Flashing
   echo "Flashing $2 to $1 partition..."
-  su root dd if=$2 of=$DEVDIR/$1 || exit 2
+  dd if=$2 of=$DEVDIR/$1 || exit 2
   echo "Done!"
  fi
 fi
