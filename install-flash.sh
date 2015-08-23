@@ -11,10 +11,12 @@ do
 	if [[ $DEST = "/system/bin" || $DEST = "/system/xbin" ]]
 	then
 		echo "Re-mounting system to read-write"
-		mount -o rw,remount /system || exit 1
+		mount -o rw,remount /system || exec echo "Failed. Root or GTFO!
+Run su root sh `basename $0`" #It is more informative than exit-code, and my bash shell doesn't show exit codes  ¯\(°_o)/¯
 	fi
 	echo "Installing 'flash' to $DEST"
-	cp -f flash $DEST/ || exit 1
+	cp -f flash $DEST/ || exec echo "Failed. Root or GTFO!
+Run su root sh `basename $0`"
 	chmod 755 $DEST/flash
 	if [[ $DEST = "/system/bin" || $DEST = "/system/xbin" ]]
 	then
