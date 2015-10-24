@@ -6,9 +6,9 @@ BAKDIR=/sdcard/Partition_backup #backups directory
 info () {
 echo "Partition images flashing utility by Alexander Agura (Aug-21-2015)
 This utility flashes chosen image file to a chosen partition. Partition will be backed up before flashing.
-Usage: flash [PARTITION] [FILE] [-n|--nobak]
+Usage: `basename $0` [PARTITION] [FILE] [-n|--nobak]
        -n,--nobak Skip backup creating
-Usage#2: flash [option]
+Usage#2: `basename $0` [option]
 Options:
        --lsbak      List backups
        --rmbak      Clean up backup folder
