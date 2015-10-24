@@ -3,8 +3,10 @@
 DEVDIR=/dev/block/platform/msm_sdcc.1/by-name #block devices derectory
 BAKDIR=/sdcard/Partition_backup #backups directory
 
+VERS=1.1.0
 info () {
-echo "Partition images flashing utility by Alexander Agura (Aug-21-2015)
+echo "Partition images flashing utility by Alexander Agura
+Version: $VERS
 This utility flashes chosen image file to a chosen partition. Partition will be backed up before flashing.
 Usage: `basename $0` [PARTITION] [FILE] [-n|--nobak]
        -n,--nobak Skip backup creating
