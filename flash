@@ -3,6 +3,19 @@
 DEVDIR=/dev/block/platform/msm_sdcc.1/by-name #block devices derectory
 BAKDIR=/sdcard/Partition_backup #backups directory
 
+info () {
+echo "Partition images flashing utility by Alexander Agura (Aug-21-2015)
+This utility flashes chosen image file to a chosen partition. Partition will be backed up before flashing.
+Usage: flash [PARTITION] [FILE] [-n|--nobak]
+       -n,--nobak Skip backup creating
+Usage#2: flash [option]
+Options:
+       --lsbak      List backups
+       --rmbak      Clean up backup folder
+       --lsdev      List available partitions
+       --restore|-r Restore backup
+       --help|-h    Show this help and exit"
+}
 #Checking parameters
 case $1 in
 --rmbak)
@@ -33,25 +46,16 @@ case $1 in
 		fi
 		dd if=$DEVDIR/$2 of=$BAKDIR/$BAK && echo "$2 is restored from $(realpath $BAK)"|| exit 2
 ;;
+--help|-h)
+	info
 *)
 if [[ -z "$2" || "$#" > "3" || -n "$3" && "$3" != "-n" && "$3" != "--nobak" ]]
 then
-	#Show info
-	echo "Partition images flashing utility by Alexander Agura (Aug-21-2015)
-This utility flashes chosen image file to a chosen partition. Partition will be backed up before flashing.
-Usage: flash [PARTITION] [FILE] [-n|--nobak]
-       -n,--nobak Skip backup creating
-Usage#2: flash [option]
-Options:
-       --lsbak      List backups
-       --rmbak      Clean up backup folder
-       --lsdev      List available partitions
-       --restore|-r  Restore backup"
+	info
 	exit 1
 else
 	if [[ "$3" = "-n" || "$3" = "--nobak" ]]
 	then
-		#Flashing with -n or --nobak parameter
 		echo "Flashing $2 to $1 without backup!
 Processing..."
 		dd if=$2 of=$DEVDIR/$1 || exit 2
