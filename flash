@@ -10,10 +10,28 @@ case $1 in
 	echo "All backups are removed!"
 ;;
 --lsbak)
-	ls $BAKDIR
+	ls $BAKDIR || echo "No backups directory."
 ;;
 --lsdev)
 	ls $DEVDIR
+;;
+--restore|-r)
+	if [[ "$#" > "3" || "$#" = 1 ]]
+	then
+		echo "Usage: `basebame $0`  --restore|-r [PARTITION] <BAKNAME>"
+		echo "BAKNAME is not necessary, you will be promted to choose it"
+		echo "Enter `basename $0` --lsbak to vies backups list"; exit 1
+	else
+		BAK=$3
+		if [ $BAK -z ]
+		then
+			test -d $BAKDIR || { echo "No backups directory!"; exit 3;}
+			ls $BAKDIR/$2* &> /dev/null || { echo "No backups of $2"; exit 3;}
+			PS3="Select the backup: "
+			select BAK in $(ls $BAKDIR/$2*); do; break; done
+			unset PS3
+		fi
+		dd if=$DEVDIR/$2 of=$BAKDIR/$BAK && echo "$2 is restored from $(realpath $BAK)"|| exit 2
 ;;
 *)
 if [[ -z "$2" || "$#" > "3" || -n "$3" && "$3" != "-n" && "$3" != "--nobak" ]]
@@ -27,7 +45,9 @@ Usage#2: flash [option]
 Options:
        --lsbak      List backups
        --rmbak      Clean up backup folder
-       --lsdev      List available partitions"
+       --lsdev      List available partitions
+       --restore|-r  Restore backup"
+	exit 1
 else
 	if [[ "$3" = "-n" || "$3" = "--nobak" ]]
 	then
@@ -40,7 +60,7 @@ Processing..."
 		#Backing up partition
 		echo "Backing up $1 before flashing..."
 		mkdir -p $BAKDIR
-		dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 1
+		dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 2
 		echo "$1 saved as $BAKDIR/$1-`busybox date -Iseconds`.img"
 		echo "Enter 'flash --lsbak' to list all backups or 'flash --rmbak' to clean up backup folder"
 		#Flashing
