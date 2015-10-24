@@ -35,7 +35,7 @@ case $1 in
 	then
 		echo "Usage: `basename $0`  --restore|-r [PARTITION] <BAKNAME>"
 		echo "BAKNAME is not necessary, you will be promted to choose it"
-		echo "Enter `basename $0` --lsbak to vies backups list"; exit 1
+		echo "Enter `basename $0` --lsbak to view backups list"; exit 1
 	else
 		BAK=$3
 		if [ $BAK -z ]
