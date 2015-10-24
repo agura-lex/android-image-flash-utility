@@ -3,7 +3,7 @@
 DEVDIR=/dev/block/platform/msm_sdcc.1/by-name #block devices derectory
 BAKDIR=/sdcard/Partition_backup #backups directory
 
-VERS=1.1.0
+VERS=1.1.01
 info () {
 echo "Partition images flashing utility by Alexander Agura
 Version: $VERS
@@ -33,7 +33,7 @@ case $1 in
 --restore|-r)
 	if [[ "$#" > "3" || "$#" = 1 ]]
 	then
-		echo "Usage: `basebame $0`  --restore|-r [PARTITION] <BAKNAME>"
+		echo "Usage: `basename $0`  --restore|-r [PARTITION] <BAKNAME>"
 		echo "BAKNAME is not necessary, you will be promted to choose it"
 		echo "Enter `basename $0` --lsbak to vies backups list"; exit 1
 	else
@@ -42,11 +42,18 @@ case $1 in
 		then
 			test -d $BAKDIR || { echo "No backups directory!"; exit 3;}
 			ls $BAKDIR/$2* &> /dev/null || { echo "No backups of $2"; exit 3;}
-			PS3="Select the backup: "
-			select BAK in $(ls $BAKDIR/$2*); do; break; done
+			echo "Select the backup from the list:"
+			echo
+			PS3="Select: "
+			cd $BAKDIR
+			select BAK in $(ls $2*)
+			do break; done
 			unset PS3
+			cd $OLDPWD
 		fi
-		dd if=$DEVDIR/$2 of=$BAKDIR/$BAK && echo "$2 is restored from $(realpath $BAK)"|| exit 2
+		echo "Restoring $2 from $BAKDIR/$BAK"
+		dd if=$BAKDIR/$BAK of=$DEVDIR/$2 && echo "$2 is restored"|| exit 2
+	fi
 ;;
 --help|-h)
 	info
