@@ -3,7 +3,7 @@
 DEVDIR=/dev/block/platform/msm_sdcc.1/by-name #block devices derectory
 BAKDIR=/sdcard/Partition_backup #backups directory
 
-VERS=1.1.01
+VERS=1.1.02
 info () {
 echo "Partition images flashing utility by Alexander Agura
 Version: $VERS
@@ -25,10 +25,11 @@ case $1 in
 	echo "All backups are removed!"
 ;;
 --lsbak)
-	ls $BAKDIR || echo "No backups directory."
+	ls $BAKDIR || { echo "No backups directory."; exit 3;}
 ;;
 --lsdev)
-	ls $DEVDIR
+	ls $DEVDIR || su root ls $DEVDIR || { echo "Block devices directory not found!"; echo "Is \'$DEVDIR\' your block devices directory?";}
+		# 'su root *' is tested only with SuperSU 'su' binary. Don't know if it works with other root implementations.
 ;;
 --restore|-r)
 	if [[ "$#" > "3" || "$#" = 1 ]]
