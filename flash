@@ -75,8 +75,10 @@ Processing..."
 		#Backing up partition
 		echo "Backing up $1 before flashing..."
 		mkdir -p $BAKDIR
-		dd if=$DEVDIR/$1 of=$BAKDIR/$1-`busybox date -Iseconds`.img || exit 2
-		echo "$1 saved as $BAKDIR/$1-`busybox date -Iseconds`.img"
+		BAK="$1-`busybox date`.img"
+		dd if=$DEVDIR/$1 of=$BAKDIR/$BAK || exit 2
+		echo "$1 saved as $BAKDIR/$BAK.img"
+		unset BAK
 		echo "Enter 'flash --lsbak' to list all backups or 'flash --rmbak' to clean up backup folder"
 		#Flashing
 		echo "Flashing $2 to $1 partition..."
