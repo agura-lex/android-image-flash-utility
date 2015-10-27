@@ -1,0 +1,12 @@
+# Here are the things I want to add to this script-monkey piece of code
+
++ README
++ auto completion
++ backup-only function
++ netinstaller/updater (curl needed)
++ config file to make the script configurable without editing it
++ maybe autocofig
++ separate scripts to call functions from main flash script
++ make this dumb piece of crap smarter (initially it was 2-3 line dumb as hell script to avoid writing whole path names in dd, lol) 
++ make it buying you beer
++ ...anything that comes to my mind, but now it is enough things to do
