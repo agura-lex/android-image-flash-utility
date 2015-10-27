@@ -75,7 +75,7 @@ Processing..."
 		#Backing up partition
 		echo "Backing up $1 before flashing..."
 		mkdir -p $BAKDIR
-		BAK="$1-`busybox date`.img"
+		BAK="$1-`busybox date -Iseconds`.img"
 		dd if=$DEVDIR/$1 of=$BAKDIR/$BAK || exit 2
 		echo "$1 saved as $BAKDIR/$BAK.img"
 		unset BAK
